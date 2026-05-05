@@ -1,0 +1,42 @@
+<div id="admin-content">
+      <div class="container">
+          <div class="row">
+              <div class="col-md-10">
+                  <h1 class="admin-heading"><i class="fa fa-file-text"></i> All Articles</h1>
+              </div>
+              <div class="col-md-2">
+                  <a class="add-new" href="/admin/add-article">Add New Article</a>
+              </div>
+              <div class="col-md-12">
+                <% if(articles && articles.length > 0){ %>
+                  <table class="content-table" style="background: white;">
+                      <thead>
+                        <th>S.No.</th>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Date</th>
+                        <th>Author</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                      </thead>
+                      <tbody>
+                          <% articles.forEach((article, index) => { %>
+                            <tr>
+                                <td class='id'><%= index + 1 %></td>
+                                <td><%= article.title %></td>
+                                <td><%= article.category.name %></td>
+                                <td><%= article.timestampes.toLocaleString().slice(0, 10) %></td>
+                                <td><%= article.author.fullname %></td>
+                                <td class='edit'><a href='/admin/update-article/<%= article.id %>'><i class='fa fa-edit'></i></a></td>
+                                <td class='delete'><a href='/admin/delete-article/<%= article.id %>'><i class='fa fa-trash-o'></i></a></td>
+                            </tr>
+                          <% }) %>
+                      </tbody>
+                  </table>
+                <% }else{ %>
+                  <p style="text-align: center;">No articles were found</p>
+                <% } %>
+              </div>
+          </div>
+      </div>
+  </div>

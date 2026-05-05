@@ -1,0 +1,7 @@
+<% if(errors.length > 0){ %>
+    <ul class="alert alert-danger mt-3">
+        <% errors.forEach(function(error){ %>
+            <li><%= error.msg %></li>
+        <% }) %>
+    </ul>
+<% } %>
