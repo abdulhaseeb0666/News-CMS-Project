@@ -25,7 +25,7 @@
                                 <td class='id'><%= index + 1 %></td>
                                 <td><%= article.title %></td>
                                 <td><%= article.category.name %></td>
-                                <td><%= article.timestampes.toLocaleString().slice(0, 10) %></td>
+                                <td><%= article.createdAt.toLocaleString().slice(0, 10) %></td>
                                 <td><%= article.author.fullname %></td>
                                 <td class='edit'><a href='/admin/update-article/<%= article.id %>'><i class='fa fa-edit'></i></a></td>
                                 <td class='delete'><a href='/admin/delete-article/<%= article.id %>'><i class='fa fa-trash-o'></i></a></td>
