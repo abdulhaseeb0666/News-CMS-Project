@@ -1,3 +1,4 @@
+<% categoryArticles = paginatedArticles.data %>
 <!-- post-container -->
     <div class="post-container">
         <h2 class="page-heading"><%= category.name %></h2>
@@ -33,20 +34,33 @@
             </div>
         </div>
         <% }); %>
+        <% 
+            const currentPage = paginatedArticles.page != null ? paginatedArticles.page
+                : (paginatedArticles.currentPage != null ? paginatedArticles.currentPage
+                : (paginatedArticles.pagination && paginatedArticles.pagination.page) || 1);
+            const totalPages = paginatedArticles.pages != null ? paginatedArticles.pages
+                : (paginatedArticles.totalPages != null ? paginatedArticles.totalPages
+                : (paginatedArticles.pageCount != null ? paginatedArticles.pageCount
+                : (paginatedArticles.pagination && (paginatedArticles.pagination.pages || paginatedArticles.pagination.totalPages || paginatedArticles.pagination.pageCount)) || 1));
+            const prevPage = paginatedArticles.prevPage != null ? paginatedArticles.prevPage
+                : (currentPage > 1 ? currentPage - 1 : null);
+            const nextPage = paginatedArticles.nextPage != null ? paginatedArticles.nextPage
+                : (currentPage < totalPages ? currentPage + 1 : null);
+        %>
         <nav>
-            <ul class="pagination">
-            <li class="page-item disabled">
-                <a class="page-link">Previous</a>
+        <ul class="pagination">
+            <li class="page-item <%= !prevPage ? 'disabled' : '' %>">
+            <a class="page-link" href="<%= prevPage ? '?page=' + prevPage : '#' %>">Previous</a>
             </li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item active">
-                <a class="page-link" href="#" aria-current="page">2</a>
+            <% for (let page = 1; page <= totalPages; page++) { %>
+            <li class="page-item <%= page === currentPage ? 'active' : '' %>">
+                <a class="page-link" href="<%= page === currentPage ? '#' : '?page=' + page %>" <%= page === currentPage ? 'aria-current="page"' : '' %>><%= page %></a>
             </li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item">
-                <a class="page-link" href="#">Next</a>
+            <% } %>
+            <li class="page-item <%= !nextPage ? 'disabled' : '' %>">
+            <a class="page-link" href="<%= nextPage ? '?page=' + nextPage : '#' %>">Next</a>
             </li>
-            </ul>
+        </ul>
         </nav>
     </div>
 <!-- /post-container -->
