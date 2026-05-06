@@ -48,10 +48,15 @@ export const singleArticle = async (req, res) => {
 };
 
 export const search = async (req, res) => {
-    const articles = await News.find().populate("category" , {name : 1 , slug : 1}).populate("author" , "fullname").sort({createdAt : 1});
+    const search = req.query.search;
+
+    const articles = await News.find({$or : [
+        {title : {$regex : search , $options : "i"}},
+        {content : {$regex : search , $options : "i"}},
+    ]}).populate("category" , {name : 1 , slug : 1}).populate("author" , "fullname").sort({createdAt : 1});
     const categoriesInUse = await News.distinct("category");
     const categories = await Category.find({_id : {$in : categoriesInUse}});
-    res.render("search.ejs" , {articles , categories});
+    res.render("search.ejs" , {articles , categories , search});
     
 };
 
