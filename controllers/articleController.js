@@ -6,10 +6,10 @@ import { validationResult } from "express-validator";
 export const allArticle = async (req, res, next) => {
     try{
         if(req.role == "admin"){
-            const news = await News.find().populate("category" , "name").populate("author" , "fullname");
+            const news = await News.find().populate("category" , "name").populate("author" , "fullname").sort({createdAt : -1});
             return res.render("admin/articles/index" , {articles:news , role:req.role})
         }else{
-            const news = await News.find({author : req.id}).populate("category" , "name").populate("author" , "fullname");
+            const news = await News.find({author : req.id}).populate("category" , "name").populate("author" , "fullname").sort({createdAt : -1});
             res.render("admin/articles/index" , {articles:news , role:req.role})
         }
     }catch(err){

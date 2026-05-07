@@ -13,7 +13,6 @@
                     <thead>
                         <th>S.No.</th>
                         <th>Category Name</th>
-                        <th>No. of Article</th>
                         <th>Edit</th>
                         <th>Delete</th>
                     </thead>
@@ -22,7 +21,6 @@
                             <tr>
                                 <td class='id'><%= index + 1 %></td>
                                 <td><%= category.name %></td>
-                                <td>5</td>
                                 <td class='edit'><a href='/admin/update-category/<%= category._id %>'><i class='fa fa-edit'></i></a></td>
                                 <td class='delete'><a href='/admin/delete-category/<%= category._id %>'><i class='fa fa-trash-o'></i></a></td>
                             </tr>

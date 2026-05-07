@@ -51,7 +51,7 @@ export const saveSettings = async (req, res, next) =>{
         await Setting.findOneAndDelete({});
     
         const {website_title , footer_description} = req.body;
-        const website_logo = req.file ? req.file.filename : null;
+        const website_logo = req.file ? req.file.filename : settings.website_logo;
     
         try{
             const settings = await Setting.findOneAndUpdate(
@@ -68,6 +68,9 @@ export const saveSettings = async (req, res, next) =>{
             next(err);
         }
     }catch(err){
+        if(req.file){
+            fs.unlinkSync(`./public/uploads/${req.file.filename}`);
+        }
         next(err);
     }
 }

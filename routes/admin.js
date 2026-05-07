@@ -47,6 +47,7 @@ router.get('/delete-article/:id', isLogin , articleController.deleteArticle);
 
 //Comment Routes
 router.get('/comments', isLogin , commentController.allComments);
+router.post('/delete-comment/:id' , isLogin , commentController.deleteComment);
 
 // 404 Error
 router.use( isLogin , (req, res , next) => {

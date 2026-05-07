@@ -17,6 +17,6 @@ router.get("/category/:name" , articleByCategory);
 router.get("/single/:id" , singleArticle);
 router.get("/search/" , search);
 router.get("/author/:name" , author);
-router.post("/single/:id" , addcomment);
+router.post("/single/:id/comment" , addcomment);
 
 export default router;

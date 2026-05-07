@@ -7,11 +7,12 @@ import Comment from "../models/Comments.js";
 import Setting from "../models/Setting.js";
 
 import paginate from "../utils/paginate.js";
+import { populate } from "dotenv";
 
 export const index = async (req, res) => {
     const setting = await Setting.findOne();
 
-    const recentAarticles = await News.find().populate("category" , {name : 1 , slug : 1}).populate("author" , "fullname").sort({createdAt : 1});
+    const recentAarticles = await News.find().populate("category" , {name : 1 , slug : 1}).populate("author" , "fullname").sort({createdAt : -1});
     
     const paginatedArticles = await paginate(News , {} , req.query , {
         sort : "-createdAt",
@@ -30,7 +31,7 @@ export const index = async (req, res) => {
 export const articleByCategory = async (req, res) => {
     const setting = await Setting.findOne();
 
-    const recentAarticles = await News.find().populate("category" , {name : 1 , slug : 1}).populate("author" , "fullname").sort({createdAt : 1});
+    const recentAarticles = await News.find().populate("category" , {name : 1 , slug : 1}).populate("author" , "fullname").sort({createdAt : -1});
     const categoriesInUse = await News.distinct("category");
     const categories = await Category.find({_id : {$in : categoriesInUse}});
     
@@ -50,7 +51,7 @@ export const articleByCategory = async (req, res) => {
 export const author = async (req, res) => {
     const setting = await Setting.findOne();
 
-    const recentAarticles = await News.find().populate("category" , {name : 1 , slug : 1}).populate("author" , "fullname").sort({createdAt : 1});
+    const recentAarticles = await News.find().populate("category" , {name : 1 , slug : 1}).populate("author" , "fullname").sort({createdAt : -1});
     const categoriesInUse = await News.distinct("category");
     const categories = await Category.find({_id : {$in : categoriesInUse}});
     
@@ -72,14 +73,20 @@ export const author = async (req, res) => {
 export const singleArticle = async (req, res) => {
     const setting = await Setting.findOne();
 
-    const recentAarticles = await News.find().populate("category" , {name : 1 , slug : 1}).populate("author" , "fullname").sort({createdAt : 1});
+    const recentAarticles = await News.find().populate("category" , {name : 1 , slug : 1}).populate("author" , "fullname").sort({createdAt : -1});
     const categoriesInUse = await News.distinct("category");
     const categories = await Category.find({_id : {$in : categoriesInUse}});
     
     const article = await News.findById(req.params.id).populate("category" , {name : 1 , slug : 1}).populate("author" , "fullname").sort({createdAt : 1});
 
-    res.render("single.ejs" , {recentAarticles , categories , article , setting});
-    
+    const paginatedComments = await paginate(Comment , {article : article._id} , req.query , {
+        sort : "-timestampes",
+        populate : [
+            {path : "article" , select : "title"}
+        ]
+    })
+
+    res.render("single.ejs" , {recentAarticles , categories , article , setting , paginatedComments});
 };
 
 export const search = async (req, res) => {
@@ -87,7 +94,7 @@ export const search = async (req, res) => {
     
     const search = req.query.search;
     
-    const recentAarticles = await News.find().populate("category" , {name : 1 , slug : 1}).populate("author" , "fullname").sort({createdAt : 1});
+    const recentAarticles = await News.find().populate("category" , {name : 1 , slug : 1}).populate("author" , "fullname").sort({createdAt : -1});
     const articles = await News.find({$or : [
         {title : {$regex : search , $options : "i"}},
         {content : {$regex : search , $options : "i"}},
@@ -109,4 +116,12 @@ export const search = async (req, res) => {
     res.render("search.ejs" , {recentAarticles , paginatedArticles ,  categories , search , setting});
 };
 
-export const addcomment = async (req, res) => {};
+export const addcomment = async (req, res) => {
+    const {name , email , content} = req.body;
+    const article = await News.findById(req.params.id);
+    
+    const comment = new Comment({name , email , content , article : article._id});
+    await comment.save();
+    
+    res.redirect(`/single/${req.params.id}`);
+};

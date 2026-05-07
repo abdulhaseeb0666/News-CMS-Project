@@ -1,5 +1,5 @@
 const paginate = async (model , query = {} , reqQuery = {} , options = {}) => {
-    const {page = 1 , limit = 2 , sort = '-createdAt'} = reqQuery;
+    const {page = 1 , limit = 5 , sort = '-createdAt'} = reqQuery;
 
     const paginationOptions = {
         page : parseInt(page) ,
@@ -26,7 +26,7 @@ const paginate = async (model , query = {} , reqQuery = {} , options = {}) => {
             nextPage: result.nextPage
         }
     }catch(err){
-        console.log("Pagination Error");
+        console.log("Pagination Error" , err);
 
     }
 }

@@ -1,136 +1,72 @@
+<% comments = paginatedComments.data %>
 <div id="admin-content">
     <div class="container">
         <div class="row">
             <div class="col-md-12">
                 <h1 class="admin-heading"><i class="fa fa-comments"></i> Comments Management</h1>
             </div>
+            <% if(comments.length > 0){ %>
             <div class="col-md-12">
                 <table class="content-table" style="background: white;">
                     <thead>
                         <th>Article</th>
                         <th>Name</th>
                         <th>Comment</th>
-                        <th>Status</th>
                         <th>Date</th>
                         <th>Actions</th>
                     </thead>
                     <tbody>
-                        <tr>
-                        <td class='id'>Ipsum dolor sit amet</td>
-                        <td>Rahul Sharma</td>
-                        <td>Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus, eveniet!</td>
-                        <td>Approved</td>
-                        <td>02-Nov-2025</td>
-                        <td class='edit'>
-                            <select name="status" class="form-select form-select-sm d-inline-block w-auto">
-                            <option value="pending">Pending</option>
-                            <option value="approved" selected="">Approved</option>
-                            <option value="rejected">Rejected</option>
-                            </select>
-                        </td>
-                        </tr>
-                        <tr>
-                        <td class='id'>Ipsum dolor sit amet</td>
-                        <td>Rahul Sharma</td>
-                        <td>Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus, eveniet!</td>
-                        <td>Approved</td>
-                        <td>02-Nov-2025</td>
-                        <td class='edit'>
-                            <select name="status" class="form-select form-select-sm d-inline-block w-auto">
-                            <option value="pending">Pending</option>
-                            <option value="approved" selected="">Approved</option>
-                            <option value="rejected">Rejected</option>
-                            </select>
-                        </td>
-                        </tr>
-                        <tr>
-                        <td class='id'>Ipsum dolor sit amet</td>
-                        <td>Rahul Sharma</td>
-                        <td>Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus, eveniet!</td>
-                        <td>Approved</td>
-                        <td>02-Nov-2025</td>
-                        <td class='edit'>
-                            <select name="status" class="form-select form-select-sm d-inline-block w-auto">
-                            <option value="pending">Pending</option>
-                            <option value="approved" selected="">Approved</option>
-                            <option value="rejected">Rejected</option>
-                            </select>
-                        </td>
-                        </tr>
-                        <tr>
-                        <td class='id'>Ipsum dolor sit amet</td>
-                        <td>Rahul Sharma</td>
-                        <td>Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus, eveniet!</td>
-                        <td>Approved</td>
-                        <td>02-Nov-2025</td>
-                        <td class='edit'>
-                            <select name="status" class="form-select form-select-sm d-inline-block w-auto">
-                            <option value="pending">Pending</option>
-                            <option value="approved" selected="">Approved</option>
-                            <option value="rejected">Rejected</option>
-                            </select>
-                        </td>
-                        </tr>
-                        <tr>
-                        <td class='id'>Ipsum dolor sit amet</td>
-                        <td>Rahul Sharma</td>
-                        <td>Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus, eveniet!</td>
-                        <td>Approved</td>
-                        <td>02-Nov-2025</td>
-                        <td class='edit'>
-                            <select name="status" class="form-select form-select-sm d-inline-block w-auto">
-                            <option value="pending">Pending</option>
-                            <option value="approved" selected="">Approved</option>
-                            <option value="rejected">Rejected</option>
-                            </select>
-                        </td>
-                        </tr>
-                        <tr>
-                        <td class='id'>Ipsum dolor sit amet</td>
-                        <td>Rahul Sharma</td>
-                        <td>Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus, eveniet!</td>
-                        <td>Approved</td>
-                        <td>02-Nov-2025</td>
-                        <td class='edit'>
-                            <select name="status" class="form-select form-select-sm d-inline-block w-auto">
-                            <option value="pending">Pending</option>
-                            <option value="approved" selected="">Approved</option>
-                            <option value="rejected">Rejected</option>
-                            </select>
-                        </td>
-                        </tr>
-                        <tr>
-                        <td class='id'>Ipsum dolor sit amet</td>
-                        <td>Rahul Sharma</td>
-                        <td>Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus, eveniet!</td>
-                        <td>Approved</td>
-                        <td>02-Nov-2025</td>
-                        <td class='edit'>
-                            <select name="status" class="form-select form-select-sm d-inline-block w-auto">
-                            <option value="pending">Pending</option>
-                            <option value="approved" selected="">Approved</option>
-                            <option value="rejected">Rejected</option>
-                            </select>
-                        </td>
-                        </tr>
+                        <% comments.forEach(comment => { %>
+                            <tr>
+                                <td class='id'><%= comment.article.title %></td>
+                                <td><%= comment.name %></td>
+                                <td><%= comment.content %></td>
+                                <td><%= comment.timestampes.toDateString() %></td>
+                                <td class='edit'>
+                                    <form action="/admin/delete-comment/<%= comment._id %>" method="post" style="display:inline;">
+                                        <button type="submit" class="btn btn-link p-0 m-0 text-danger" aria-label="Delete comment">
+                                            <i class='fa fa-trash-o'></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <% }) %>
                     </tbody>
                 </table>
-                <nav aria-label="...">
+                <% 
+                const currentPage = paginatedComments.page != null ? paginatedComments.page
+                    : (paginatedComments.currentPage != null ? paginatedComments.currentPage
+                    : (paginatedComments.pagination && paginatedComments.pagination.page) || 1);
+                const totalPages = paginatedComments.pages != null ? paginatedComments.pages
+                    : (paginatedComments.totalPages != null ? paginatedComments.totalPages
+                    : (paginatedComments.pageCount != null ? paginatedComments.pageCount
+                    : (paginatedComments.pagination && (paginatedComments.pagination.pages || paginatedComments.pagination.totalPages || paginatedComments.pagination.pageCount)) || 1));
+                const prevPage = paginatedComments.prevPage != null ? paginatedComments.prevPage
+                    : (currentPage > 1 ? currentPage - 1 : null);
+                const nextPage = paginatedComments.nextPage != null ? paginatedComments.nextPage
+                    : (currentPage < totalPages ? currentPage + 1 : null);
+                %>
+                <nav>
                 <ul class="pagination">
-                    <li class="page-item disabled">
-                    <a class="page-link">Previous</a>
+                    <li class="page-item <%= !prevPage ? 'disabled' : '' %>">
+                    <a class="page-link" href="<%= prevPage ? '?page=' + prevPage : '#' %>">Previous</a>
                     </li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item active">
-                    <a class="page-link" href="#" aria-current="page">2</a>
+                    <% for (let page = 1; page <= totalPages; page++) { %>
+                    <li class="page-item <%= page === currentPage ? 'active' : '' %>">
+                        <a class="page-link" href="<%= page === currentPage ? '#' : '?page=' + page %>" <%= page === currentPage ? 'aria-current="page"' : '' %>><%= page %></a>
                     </li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item">
-                    <a class="page-link" href="#">Next</a>
+                    <% } %>
+                    <li class="page-item <%= !nextPage ? 'disabled' : '' %>">
+                    <a class="page-link" href="<%= nextPage ? '?page=' + nextPage : '#' %>">Next</a>
                     </li>
                 </ul>
                 </nav>
             </div>
+            <% }else{ %>
+            <div class="col-md-12">
+                <p class="no-comments">No comments yet</p>
+            </div>
+            <% } %>
         </div>
     </div>
 </div>
