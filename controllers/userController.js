@@ -176,30 +176,36 @@ export const updateUserPage = async (req, res, next) => {
 }
 
 export const updateUser = async (req, res, next) => {
-
-    const errors = validationResult(req);
-    if(!errors.isEmpty()){
-        return res.render("admin/users/update.ejs", { user , role:req.role , errors : errors.array()});
-
-    }
-
-    const {fullname, password, role} = req.body;
+    
     try{
         const user = await User.findById(req.params.id);
+        
+        const errors = validationResult(req);
+        if(!errors.isEmpty()){
+            return res.render("admin/users/update.ejs", { user , role:req.role , errors : errors.array()});
+
+        }
         if(!user){
             const error = new Error("User not found");        
             error.status = 404;
             return next(error);    
         }
 
-        user.fullname = fullname || user.fullname;
+        const {fullname, password , role} = req.body;
+
+        const updateData = {
+            fullname: fullname || user.fullname,
+            role: role || user.role
+        };
+
         if(password){
-            user.password = await bcrypt.hash(password, 12);
+            updateData.password = await bcrypt.hash(password, 12);
         }
-        user.role = role || user.role;
-        await user.save(); 
+
+        await User.findByIdAndUpdate(req.params.id, updateData);
         res.redirect("/admin/users");
     }catch(err){
+        console.log(err); 
         next(err);
     }
 }

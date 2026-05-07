@@ -67,7 +67,7 @@ export const userUpdateValidation = [
 
     body("role")
         .optional()
-        .isIn(["admin", "user"])
+        .isIn(["admin", "author"])
         .withMessage("Role must be either admin or user")
 ]
 
