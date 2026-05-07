@@ -3,6 +3,7 @@ import News from "../models/News.js";
 import User from "../models/Users.js";
 import fs from "fs";
 import { validationResult } from "express-validator";
+
 export const allArticle = async (req, res, next) => {
     try{
         if(req.role == "admin"){
