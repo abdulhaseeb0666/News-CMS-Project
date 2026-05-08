@@ -10,6 +10,9 @@ import dotenv from "dotenv";
 dotenv.config();
 import minifyHTML from "express-minify-html-terser";
 
+import dns from "dns";
+dns.setServers(["1.1.1.1", "8.8.8.8"]);
+
 // Middlewares
 app.use(express.json());
 app.use(express.urlencoded({extended : true}));
