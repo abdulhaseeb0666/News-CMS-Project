@@ -8,7 +8,7 @@ import cookieParser from "cookie-parser";
 import flash from "connect-flash";
 import dotenv from "dotenv";
 dotenv.config();
-
+import minifyHTML from "express-minify-html-terser";
 
 // Middlewares
 app.use(express.json());
@@ -18,7 +18,19 @@ app.use(cookieParser());
 app.use(expressLayouts);
 app.set("view engine" , "ejs");
 app.set("layout" , "layout" )
- 
+app.use(minifyHTML({
+    override:      true,
+    exception_url: false,
+    htmlMinifier: {
+        removeComments:            true,
+        collapseWhitespace:        true,
+        collapseBooleanAttributes: true,
+        removeAttributeQuotes:     true,
+        removeEmptyAttributes:     true,
+        minifyJS:                  true
+    }
+}));
+
 // Database Connection
 mongoose.connect(process.env.MONGODB_URI)
 .then(()=>{
